@@ -17,18 +17,20 @@ import mod.magd.pkgs.PkgRegistry;
 // =========================================================
 
 // Dialog that presents two management options:
-//   1. Delete - Remove one or more packages
+//   1. Create - creates a new package
 //   2. Edit - Modify package name or display name
+//   3. Delete - Remove one or more packages
 
 // PURPOSE:
 //   Acts as a dispatcher for package management actions.
 //   User sees a simple question: "What would you like to do?"
-//   with two action buttons.
+//   with 3 action buttons.
 
 // FEATURES:
-//   - Centered dialog with title and two buttons
-//   - Delete button launches PkgDeleteDialog
+//   - Centered dialog with title and 3 buttons
+//   - create button launches PkgCreatorDialog
 //   - Edit button launches PkgEditDialog
+//   - Delete button launches PkgDeleteDialog
 //   - Clean, simple UX
 
 // USAGE:
@@ -36,8 +38,9 @@ import mod.magd.pkgs.PkgRegistry;
 //       this,
 //       pkgRegistry,
 //       activePackage,
-//       (deleted) -> refreshUI(),           // on delete
+//       (created) -> refreshUI(),           // on create
 //       (edited) -> updateActivePackage()   // on edit
+//       (deleted) -> refreshUI(),           // on delete
 //   ).show();
 
 // =========================================================
@@ -49,14 +52,15 @@ public final class PkgManageDialog {
     // =========================================================
 
     /**
-     * Callback when packages are deleted.
+     * Callback when packages are created.
      */
-    public interface OnPackagesDeletedListener {
+    public interface OnPackagesCreatedListener {
         /**
-         * Called when deletion is complete.
-         * Automatically switches to main package if active package was deleted.
+         * Called when creation is complete.
+         *
+         * @param createdPackage The created package entry
          */
-        void onPackagesDeleted();
+        void onPackagesCreated(PkgEntry createdPackage);
     }
 
     /**
@@ -71,6 +75,17 @@ public final class PkgManageDialog {
         void onPackageEdited(PkgEntry editedPackage);
     }
 
+    /**
+     * Callback when packages are deleted.
+     */
+    public interface OnPackagesDeletedListener {
+        /**
+         * Called when deletion is complete.
+         * Automatically switches to main package if active package was deleted.
+         */
+        void onPackagesDeleted();
+    }
+
     // =========================================================
     // VARIABLES
     // =========================================================
@@ -78,8 +93,9 @@ public final class PkgManageDialog {
     private final Context context;
     private final PkgRegistry registry;
     private final PkgEntry activeEntry;
-    private final OnPackagesDeletedListener deleteListener;
+    private final OnPackagesCreatedListener createListener;
     private final OnPackageEditedListener editListener;
+    private final OnPackagesDeletedListener deleteListener;
 
     private android.app.Dialog dialog;
 
@@ -93,30 +109,35 @@ public final class PkgManageDialog {
      * @param context Application context
      * @param registry Package registry
      * @param activeEntry Currently active package
-     * @param deleteListener Callback when delete is confirmed
+     * @param createListener Callback when package is created
      * @param editListener Callback when package is edited
+     * @param deleteListener Callback when delete is confirmed
      */
     public PkgManageDialog(
         Context context,
         PkgRegistry registry,
         PkgEntry activeEntry,
-        OnPackagesDeletedListener deleteListener,
-        OnPackageEditedListener editListener
+        OnPackagesCreatedListener createListener,
+        OnPackageEditedListener editListener,
+        OnPackagesDeletedListener deleteListener
     ) {
         if (context == null)
             throw new IllegalArgumentException("PkgManageDialog: context must not be null.");
         if (registry == null)
             throw new IllegalArgumentException("PkgManageDialog: registry must not be null.");
-        if (deleteListener == null)
-            throw new IllegalArgumentException("PkgManageDialog: deleteListener must not be null.");
+        if (createListener == null)
+            throw new IllegalArgumentException("PkgManageDialog: createListener must not be null.");
         if (editListener == null)
             throw new IllegalArgumentException("PkgManageDialog: editListener must not be null.");
+        if (deleteListener == null)
+            throw new IllegalArgumentException("PkgManageDialog: deleteListener must not be null.");
 
         this.context = context;
         this.registry = registry;
         this.activeEntry = activeEntry;
-        this.deleteListener = deleteListener;
+        this.createListener = createListener;
         this.editListener = editListener;
+        this.deleteListener = deleteListener;
     }
 
     // =========================================================
@@ -200,6 +221,64 @@ public final class PkgManageDialog {
             ViewGroup.LayoutParams.WRAP_CONTENT
         ));
 
+
+        
+        // Create button
+        Button btnCreate = new Button(context);
+        btnCreate.setText("Create");
+        btnCreate.setLayoutParams(new LinearLayout.LayoutParams(
+            0,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            1f
+        ));
+        btnCreate.setOnClickListener(v -> {
+            dismiss();
+            // Show the create dialog
+            new PkgCreatorDialog(
+                context,
+                registry,
+                (created) -> createListener.onPackagesCreated(created)
+            ).show();
+        });
+        buttonLayout.addView(btnCreate);
+        
+        
+        
+        // Spacer between buttons
+        View spacer = new View(context);
+        spacer.setLayoutParams(new LinearLayout.LayoutParams(dpToPx(8), 0));
+        buttonLayout.addView(spacer);
+        
+        
+        
+        // Edit button
+        Button btnEdit = new Button(context);
+        btnEdit.setText("Edit");
+        btnEdit.setLayoutParams(new LinearLayout.LayoutParams(
+            0,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            1f
+        ));
+        btnEdit.setOnClickListener(v -> {
+            dismiss();
+            // Show the edit dialog
+            new PkgEditDialog(
+                context,
+                registry,
+                (edited) -> editListener.onPackageEdited(edited)
+            ).show();
+        });
+        buttonLayout.addView(btnEdit);
+        
+        
+        
+        // Spacer2 between buttons
+        View spacer2 = new View(context);
+        spacer2.setLayoutParams(new LinearLayout.LayoutParams(dpToPx(8), 0));
+        buttonLayout.addView(spacer2);
+        
+        
+        
         // Delete button
         Button btnDelete = new Button(context);
         btnDelete.setText("Delete");
@@ -219,33 +298,13 @@ public final class PkgManageDialog {
             ).show();
         });
         buttonLayout.addView(btnDelete);
-
-        // Spacer between buttons
-        View spacer = new View(context);
-        spacer.setLayoutParams(new LinearLayout.LayoutParams(dpToPx(8), 0));
-        buttonLayout.addView(spacer);
-
-        // Edit button
-        Button btnEdit = new Button(context);
-        btnEdit.setText("Edit");
-        btnEdit.setLayoutParams(new LinearLayout.LayoutParams(
-            0,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            1f
-        ));
-        btnEdit.setOnClickListener(v -> {
-            dismiss();
-            // Show the edit dialog
-            new PkgEditDialog(
-                context,
-                registry,
-                (edited) -> editListener.onPackageEdited(edited)
-            ).show();
-        });
-        buttonLayout.addView(btnEdit);
-
+        
+        
+        
         root.addView(buttonLayout);
 
+
+        
         return root;
     }
 
