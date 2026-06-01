@@ -1,4 +1,4 @@
-# SW_MM Multi-Package Support - Development Progress
+# SW Multi-Package Support
 
 ## 🎯 Project Goal
 
@@ -31,88 +31,94 @@
     - Displays the **Main Package** (the original package)
     - Shows two buttons: **"Switch"** and **"Manage"**
 
-5. **User taps "Switch"**
-    - Shows `PkgPickerDialog`
-    - Displays a list of all existing packages
-    - Each item shows:
-        - Display name (e.g., "UI Layer") in bold
-        - Package name (e.g., "com.example.app.ui") in gray
-        - Blue checkmark if this is the current active package
-    - User clicks a package to select it
-    - `ManageJavaActivity` updates:
-        - Active package switches
-        - File browser refreshes to show files from the chosen package
-        - `PkgView` (header) updates to reflect new active package
+    A) **User taps "Switch"**
+        - Shows `PkgPickerDialog`
+        - Displays a list of all existing packages
+        - Each item shows:
+            - Display name (e.g., "UI Layer") in bold
+            - Package name (e.g., "com.example.app.ui") in gray
+            - Blue checkmark if this is the current active package
+        - User clicks a package to select it
+        - `ManageJavaActivity` updates:
+            - Active package switches
+            - File browser refreshes to show files from the chosen package
+            - `PkgView` (header) updates to reflect new active package
+    
+    B) **User taps "Manage"**
+        - Shows `PkgManageDialog`
+        - Displays title: "What would you like to do?"
+        - Shows three buttons: **Create**, **Edit**, **Delete**
 
-6. **User taps "Manage"**
-    - Shows `PkgManageDialog`
-    - Displays title: "What would you like to do?"
-    - Shows three buttons: **Create**, **Edit**, **Delete**
+        a. **User taps "Create"**
+            - `PkgCreatorDialog` appears
+            - User enters:
+                - **Package Name** (e.g., `com.example.app.ui`)
+                    - Fully-qualified Java package name
+                    - Validated by `PkgValidator` (8 validation rules)
+                - **Display Name** (e.g., `UI Layer`)
+                    - Human-readable label for the UI
+                    - Max 40 characters
+                    - Can be empty/null (falls back to package name in UI)
+            - Package is created:
+                - Main package files saved at: `/storage/emulated/0/.sketchware/data/{projectId}/files/java/`
+                - Extra packages files saved at: `/storage/emulated/0/.sketchware/data/{projectId}/files/java_extra/{PackageName}/`
+                - Package registry entry saved at: `/storage/emulated/0/.sketchware/data/{projectId}/files/java_pkgs.json`
+            - Dialog closes and `ManageJavaActivity` refreshes
+            - New package immediately available for switching/use
+        
+        b. **User taps "Edit"**
+            - `PkgEditDialog` appears with two phases:
+                - **Phase 1**: Shows list of all packages
+                - User selects a package to edit
+                - **Phase 2**: Shows edit form with: (we could reuse the PkgCreatorDialog here)
+                    - Display name field
+                    - Package name field
+                    - User edits one or both fields
+                    - Validation applied via `PkgValidator`
+            - **If package name changed:**
+                - Shows warning: "Package name changed. Files need to be updated."
+                - Three options:
+                    - **Cancel** - Don't apply any changes
+                    - **Don't update files** - Update package entry and rename folder only
+                    - **Update files** - Full refactoring:
+                        - Updates `java_pkgs.json` registry entry
+                        - Renames package folder in `java_extra/`
+                        - Loops through ALL files in ALL packages (main + all extras)
+                        - Uses `PkgRefactoringManager` to search/replace old package name with new
+                        - Updates:
+                            - Package declarations
+                            - Import statements
+                            - Fully-qualified references
+                            - String literals containing package name
+                            - Just EVERYTHING .. IT SEARCHES THE ENTIRE FILE TEXT
+            - **If only display name changed:**
+                - Just updates registry entry (no file changes needed)
+            - Dialog closes and refreshes
+        
+        c. **User taps "Delete"**
+            - `PkgDeleteDialog` appears with:
+                - Title: "Delete Packages"
+                - List of all packages with checkboxes
+                - Main package checkbox is grayed out (cannot delete)
+            - User checks the packages to delete
+            - Multiple packages can be selected
+            - User taps "Delete" button
+            - Confirmation shown with list of packages to be deleted
+            - User confirms by tapping "Delete" again
+            - Packages are deleted:
+                - Entries removed from `java_pkgs.json`
+                - Package folders deleted from `java_extra/`
+                - If active package was deleted → automatically switches to main package
+            - `ManageJavaActivity` refreshes
+            - File browser now shows main package files
 
-7. **User taps "Create"**
-    - `PkgCreatorDialog` appears
-    - User enters:
-        - **Package Name** (e.g., `com.example.app.ui`)
-            - Fully-qualified Java package name
-            - Validated by `PkgValidator` (8 validation rules)
-        - **Display Name** (e.g., `UI Layer`)
-            - Human-readable label for the UI
-            - Max 40 characters
-            - Can be empty/null (falls back to package name in UI)
-    - Package is created:
-        - Main package files saved at: `/storage/emulated/0/.sketchware/data/{projectId}/files/java/`
-        - Extra packages files saved at: `/storage/emulated/0/.sketchware/data/{projectId}/files/java_extra/{PackageName}/`
-        - Package registry entry saved at: `/storage/emulated/0/.sketchware/data/{projectId}/files/java_pkgs.json`
-    - Dialog closes and `ManageJavaActivity` refreshes
-    - New package immediately available for switching/use
+---
 
-8. **User taps "Edit"**
-    - `PkgEditDialog` appears with two phases:
-        - **Phase 1**: Shows list of all packages
-        - User selects a package to edit
-        - **Phase 2**: Shows edit form with: (we could reuse the PkgCreatorDialog here)
-            - Display name field
-            - Package name field
-            - User edits one or both fields
-            - Validation applied via `PkgValidator`
-    - **If package name changed:**
-        - Shows warning: "Package name changed. Files need to be updated."
-        - Three options:
-            - **Cancel** - Don't apply any changes
-            - **Don't update files** - Update package entry and rename folder only
-            - **Update files** - Full refactoring:
-                - Updates `java_pkgs.json` registry entry
-                - Renames package folder in `java_extra/`
-                - Loops through ALL files in ALL packages (main + all extras)
-                - Uses `PkgRefactoringManager` to search/replace old package name with new
-                - Updates:
-                    - Package declarations
-                    - Import statements
-                    - Fully-qualified references
-                    - String literals containing package name
-                    - Just EVERYTHING .. IT SEARCHES THE ENTIRE FILE TEXT
-    - **If only display name changed:**
-        - Just updates registry entry (no file changes needed)
-    - Dialog closes and refreshes
+## The Code Handles
 
-9. **User taps "Delete"**
-    - `PkgDeleteDialog` appears with:
-        - Title: "Delete Packages"
-        - List of all packages with checkboxes
-        - Main package checkbox is grayed out (cannot delete)
-    - User checks the packages to delete
-    - Multiple packages can be selected
-    - User taps "Delete" button
-    - Confirmation shown with list of packages to be deleted
-    - User confirms by tapping "Delete" again
-    - Packages are deleted:
-        - Entries removed from `java_pkgs.json`
-        - Package folders deleted from `java_extra/`
-        - If active package was deleted → automatically switches to main package
-    - `ManageJavaActivity` refreshes
-    - File browser now shows main package files
+### Sync, Backups & Exporting
 
-10. **Package Synchronization (Auto-sync on Open & Before Compile)**
+1. **Package Synchronization (Auto-sync on Open & Before Compile)**
     - Runs at:
         - When opening `ManageJavaActivity`
         - Before compiling project
@@ -128,7 +134,7 @@
                 - Creates empty folder for that package (preserves registry entry)
     - Result: Registry always matches file system state
 
-11. **When compiling the project**
+2. **When compiling the project**
     - Before compilation, sync runs (ensures all packages are registered)
     - `ProjectBuilderBridge.collectAllJavaSourceFiles()` called
     - Collects ALL `.java` and `.kt` files from:
@@ -139,7 +145,7 @@
     - All packages can reference each other normally
     - Final APK includes all compiled bytecode from all packages
 
-12. **When backing up the project**
+3. **When backing up the project**
     - `BackupFactory` creates backup zip including:
         - All project data from `files/` → (Sketchware Pro already do this) → (NEEDS DOUBLE CHECK)
         - `java_pkgs.json` registry file (NEW)
@@ -147,7 +153,7 @@
         - Everything needed to restore exact multi-package structure
     - Backup file: `.sketchware/backups/{projectName}/{projectName} v{version} ({projectMainPackageName}, {version}) {date}T{randomNumber}.swb` → (NEEDS DOUBLE CHECK)
 
-13. **When restoring from backup** → (Sketchware Pro already do this) → (NEEDS DOUBLE CHECK)
+4. **When restoring from backup** → (Sketchware Pro already do this) → (NEEDS DOUBLE CHECK)
     - `BackupRestoreManager` restores:
         - All files from `java/` (main package)
         - All files from `java_extra/` with package folders (NEW)
@@ -155,7 +161,7 @@
         - All other project data
     - Project restored to exact state when backed up
 
-14. **When exporting the project**
+5. **When exporting the project**
     - Exporting, is made to export the source code to Android studio
     - it suppose to makes the correct code structure 
     - it already puts the main pkg at the correct place
@@ -166,6 +172,4 @@
     - Export file contains full multi-package structure
     - don't need `java_pkgs.json` registry in the export
 
-15. **Notes**
-    - at PkgItemView.setPackageData(); Can't we just pass the PkgEntry? all the params are from pkg entry
 ---
