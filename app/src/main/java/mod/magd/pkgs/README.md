@@ -49,7 +49,7 @@
       - Displays title: "What would you like to do?"
       - Shows three buttons: **Create**, **Edit**, **Delete**
       
-        1. **User taps "Create"**
+        1. **If user taps "Create"**
            - `PkgCreatorDialog` appears
            - User enters:
              - **Package Name** (e.g., `com.example.app.ui`)
@@ -66,7 +66,7 @@
            - Dialog closes and `ManageJavaActivity` refreshes
            - New package immediately available for switching/use
         
-        2. **User taps "Edit"**
+        2. **If user taps "Edit"**
            - `PkgEditDialog` appears with two phases:
              - **Phase 1**: Shows list of all packages
                - User selects a package to edit
@@ -95,7 +95,7 @@
                        - Just EVERYTHING .. IT SEARCHES THE ENTIRE FILE TEXT
            - Dialog closes and refreshes
         
-        3. **User taps "Delete"**
+        3. **If user taps "Delete"**
            - `PkgDeleteDialog` appears with:
              - Title: "Delete Packages"
              - List of all packages with checkboxes
