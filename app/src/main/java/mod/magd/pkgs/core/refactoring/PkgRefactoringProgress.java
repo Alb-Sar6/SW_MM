@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * Tracks the progress of an ongoing package refactoring operation.
  * Saved to disk in case the app crashes/closes during refactoring.
  */
-public class RefactoringProgress {
+public class PkgRefactoringProgress {
 
     @SerializedName("reason")
     private String reason; // e.g., "RenamePkg_com.old_To_com.new"
@@ -33,12 +33,12 @@ public class RefactoringProgress {
     @SerializedName("timestamp")
     private long timestamp;
 
-    public RefactoringProgress() {
+    public PkgRefactoringProgress() {
         this.updatedFiles = new ArrayList<>();
         this.timestamp = System.currentTimeMillis();
     }
 
-    public RefactoringProgress(String reason, String oldPkg, String newPkg, String projectId) {
+    public PkgRefactoringProgress(String reason, String oldPkg, String newPkg, String projectId) {
         this();
         this.reason = reason;
         this.oldPackageName = oldPkg;
