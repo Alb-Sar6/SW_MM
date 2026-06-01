@@ -31,7 +31,7 @@
     - Displays the **Main Package** (the original package)
     - Shows two buttons: **"Switch"** and **"Manage"**
 
-    A) **User taps "Switch"**
+    A) ***User taps "Switch"***
         - Shows `PkgPickerDialog`
         - Displays a list of all existing packages
         - Each item shows:
@@ -44,14 +44,14 @@
             - File browser refreshes to show files from the chosen package
             - `PkgView` (header) updates to reflect new active package
     
-    B) **User taps "Manage"**
+    B) ***User taps "Manage"***
         - Shows `PkgManageDialog`
         - Displays title: "What would you like to do?"
         - Shows three buttons: **Create**, **Edit**, **Delete**
 
 
 
-            1. **User taps "Create"**
+            1. ****User taps "Create"****
                 - `PkgCreatorDialog` appears
                 - User enters:
                     - **Package Name** (e.g., `com.example.app.ui`)
@@ -69,7 +69,7 @@
                 - New package immediately available for switching/use
 
             
-            2. **User taps "Edit"**
+            2. ****User taps "Edit"****
                 - `PkgEditDialog` appears with two phases:
                     - **Phase 1**: Shows list of all packages
                     - User selects a package to edit
@@ -78,7 +78,7 @@
                         - Package name field
                         - User edits one or both fields
                         - Validation applied via `PkgValidator`
-                - **If package name changed:**
+                - *****If package name changed:*****
                     - Shows warning: "Package name changed. Files need to be updated."
                     - Three options:
                         - **Cancel** - Don't apply any changes
@@ -94,12 +94,12 @@
                                 - Fully-qualified references
                                 - String literals containing package name
                                 - Just EVERYTHING .. IT SEARCHES THE ENTIRE FILE TEXT
-                - **If only display name changed:**
+                - *****If only display name changed:*****
                     - Just updates registry entry (no file changes needed)
                 - Dialog closes and refreshes
 
             
-            3. **User taps "Delete"**
+            3. ****User taps "Delete"****
                 - `PkgDeleteDialog` appears with:
                     - Title: "Delete Packages"
                     - List of all packages with checkboxes
