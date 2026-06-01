@@ -544,10 +544,10 @@ public final class PkgRefactoringManager {
 
     /**
      * Build a reason string for in_progress folder naming.
-     * Format: "RenamePkg_com.old_To_com.new"
+     * Format: "RenamePkg_{com.old}_To_{com.new}"
      */
     private String buildReasonString(String oldPkg, String newPkg) {
-        return "RenamePkg_" + oldPkg + "_To_" + newPkg;
+        return "RenamePkg_{" + oldPkg + "}_To_{" + newPkg + "}";
     }
 
 
