@@ -18,7 +18,7 @@ import mod.magd.pkgs.core.refactoring.PkgRefactoringProgressCallback;
 
 
 // =========================================================
-// PkgRefactorLoadingDialog
+// PkgRefactoringProgressDialog
 // =========================================================
 
 // Non-cancellable dialog shown during package refactoring.
@@ -26,7 +26,7 @@ import mod.magd.pkgs.core.refactoring.PkgRefactoringProgressCallback;
 // overall percentage complete.
 
 // USAGE:
-//     PkgRefactorLoadingDialog dialog = new PkgRefactorLoadingDialog(activity);
+//     PkgRefactoringProgressDialog dialog = new PkgRefactoringProgressDialog(activity);
 //     dialog.setRefactoringInfo("com.old", "com.new");
 //     dialog.show();
 //
@@ -38,7 +38,7 @@ import mod.magd.pkgs.core.refactoring.PkgRefactoringProgressCallback;
 
 // =========================================================
 
-public class PkgRefactorLoadingDialog extends Dialog {
+public class PkgRefactoringProgressDialog extends Dialog {
 
     private Context context;
     private ProgressBar progressBar;
@@ -67,7 +67,7 @@ public class PkgRefactorLoadingDialog extends Dialog {
     // CONSTRUCTOR
     // =========================================================
 
-    public PkgRefactorLoadingDialog(Context context) {
+    public PkgRefactoringProgressDialog(Context context) {
         super(context);
         this.context = context;
         initializeDialog();
