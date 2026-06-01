@@ -110,7 +110,6 @@
              - Package folders deleted from `java_extra/`
              - If active package was deleted → automatically switches to main package
            - `ManageJavaActivity` refreshes
-           - File browser now shows main package files
 
 ---
 
