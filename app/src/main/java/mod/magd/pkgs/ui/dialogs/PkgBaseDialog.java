@@ -1,4 +1,4 @@
-package mod.magd.pkgs.dialogs;
+package mod.magd.pkgs.ui.dialogs;
 
 import pro.sketchware.R;
 
@@ -16,8 +16,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import mod.magd.pkgs.PkgEntry;
-import mod.magd.pkgs.PkgRegistry;
+import mod.magd.pkgs.core.PkgEntry;
+import mod.magd.pkgs.core.PkgRegistry;
 
 // =========================================================
 // PkgBaseDialog
