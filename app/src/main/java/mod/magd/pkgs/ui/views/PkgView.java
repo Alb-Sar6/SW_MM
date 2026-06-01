@@ -1,4 +1,4 @@
-package mod.magd.pkgs.views;
+package mod.magd.pkgs.ui.views;
 
 import android.content.Context;
 import android.view.Gravity;
@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.View;
 
-import mod.magd.pkgs.PkgEntry;
+import mod.magd.pkgs.core.PkgEntry;
 
 // =========================================================
 // PkgView
