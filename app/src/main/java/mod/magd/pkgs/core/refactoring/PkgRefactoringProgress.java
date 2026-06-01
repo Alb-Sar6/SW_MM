@@ -1,4 +1,4 @@
-package mod.magd.pkgs.refactoring;
+package mod.magd.pkgs.core.refactoring;
 
 import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
@@ -6,11 +6,16 @@ import java.util.ArrayList;
 /**
  * Tracks the progress of an ongoing package refactoring operation.
  * Saved to disk in case the app crashes/closes during refactoring.
+ *
+ * FILE LOCATION:
+ *   .sketchware/data/{projectId}/files/in_progress/
+ *     RenamePkg_{com.old}_To_{com.new}/
+ *       refactoring_progress.json
  */
 public class PkgRefactoringProgress {
 
     @SerializedName("reason")
-    private String reason; // e.g., "RenamePkg_com.old_To_com.new"
+    private String reason; // e.g., "RenamePkg_{com.old}_To_{com.new}"
 
     @SerializedName("oldPackageName")
     private String oldPackageName;
@@ -132,18 +137,12 @@ public class PkgRefactoringProgress {
     // =========================================================
 
     /**
-     * Calculate progress as a percentage based on file sizes.
+     * Calculate progress as a percentage based on number of files.
      * @return Progress from 0 to 100
      */
     public int getProgressPercentage() {
-        if (totalSizeBytes == 0) return 0;
-
-        long completedSize = 0;
-        // Note: In real implementation, you'd sum the sizes of updated files
-        // For now, we estimate based on number of files
-        completedSize = (long) getUpdatedFiles().size() * (totalSizeBytes / Math.max(totalFiles, 1));
-
-        return (int) ((completedSize * 100) / totalSizeBytes);
+        if (totalFiles == 0) return 0;
+        return (getUpdatedFiles().size() * 100) / totalFiles;
     }
 
     /**
@@ -151,5 +150,12 @@ public class PkgRefactoringProgress {
      */
     public int getRemainingFiles() {
         return totalFiles - getUpdatedFiles().size();
+    }
+
+    /**
+     * Check if refactoring is complete
+     */
+    public boolean isComplete() {
+        return getRemainingFiles() == 0;
     }
 }
