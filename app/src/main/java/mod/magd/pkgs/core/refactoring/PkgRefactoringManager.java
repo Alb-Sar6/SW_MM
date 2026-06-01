@@ -40,7 +40,7 @@ import com.google.gson.GsonBuilder;
 //     // 6. Search scope: ENTIRE file text, character by character
 
 // PROGRESS TRACKING:
-//     // Saves RefactoringProgress to disk after EACH file update
+//     // Saves PkgRefactoringProgress to disk after EACH file update
 //     // Location: .sketchware/data/{projectId}/files/in_progress/
 //     // File names: refactoring_progress.json
 //     // Used for crash recovery & resume
@@ -145,7 +145,7 @@ public final class PkgRefactoringManager {
         // Setup in-progress tracking
         // ──────────────────────────────────────────────────────
         String reason = buildReasonString(oldPackageName, newPackageName);
-        RefactoringProgress progress = new RefactoringProgress(
+        PkgRefactoringProgress progress = new PkgRefactoringProgress(
             reason,
             oldPackageName,
             newPackageName,
@@ -278,9 +278,9 @@ public final class PkgRefactoringManager {
      * Useful to call on app startup to detect crashes.
      *
      * @param projectFilesDir  Path to .sketchware/data/{projectId}/files/
-     * @return                 RefactoringProgress if found, null otherwise
+     * @return                 PkgRefactoringProgress if found, null otherwise
      */
-    public RefactoringProgress checkForInProgressRefactoring(File projectFilesDir) {
+    public PkgRefactoringProgress checkForInProgressRefactoring(File projectFilesDir) {
         File inProgressDir = new File(projectFilesDir, IN_PROGRESS_DIR);
 
         if (!inProgressDir.exists() || !inProgressDir.isDirectory()) {
@@ -319,13 +319,13 @@ public final class PkgRefactoringManager {
      * Resume a refactoring that was interrupted (e.g., app crash).
      *
      * @param projectFilesDir      Path to .sketchware/data/{projectId}/files/
-     * @param inProgressData       RefactoringProgress from checkForInProgressRefactoring()
+     * @param inProgressData       PkgRefactoringProgress from checkForInProgressRefactoring()
      * @param progressCallback     Optional callback to update UI
      * @return                     Result object with final stats
      */
     public PkgRefactoringResult resumeRefactoring(
         File projectFilesDir,
-        RefactoringProgress inProgressData,
+        PkgRefactoringProgress inProgressData,
         ProgressCallback progressCallback
     ) {
         if (inProgressData == null) {
@@ -479,7 +479,7 @@ public final class PkgRefactoringManager {
     /**
      * Save progress to JSON file.
      */
-    private void saveProgress(File progressFile, RefactoringProgress progress) throws Exception {
+    private void saveProgress(File progressFile, PkgRefactoringProgress progress) throws Exception {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(progress);
         FileUtil.writeFile(progressFile.getAbsolutePath(), json);
@@ -488,10 +488,10 @@ public final class PkgRefactoringManager {
     /**
      * Load progress from JSON file.
      */
-    private RefactoringProgress loadProgress(File progressFile) throws Exception {
+    private PkgRefactoringProgress loadProgress(File progressFile) throws Exception {
         String json = FileUtil.readFile(progressFile.getAbsolutePath());
         Gson gson = new Gson();
-        return gson.fromJson(json, RefactoringProgress.class);
+        return gson.fromJson(json, PkgRefactoringProgress.class);
     }
 
 
@@ -552,26 +552,6 @@ public final class PkgRefactoringManager {
 
 
 
-
-    // =========================================================
-    // INTERFACE — Progress Callback
-    // =========================================================
-
-    /**
-     * Callback to report progress to the UI.
-     * Implement to update progress dialogs, etc.
-     */
-    public interface ProgressCallback {
-        /**
-         * Called for each file being processed.
-         *
-         * @param filePath      Absolute path of current file
-         * @param currentIndex  1-based index (e.g., 5 out of 23)
-         * @param totalCount    Total files to process
-         * @param percentageDone  Overall percentage done (0-100)
-         */
-        void onFileProcessing(String filePath, int currentIndex, int totalCount, int percentageDone);
-    }
 
 
 
