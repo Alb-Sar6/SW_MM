@@ -11,6 +11,9 @@ public class FilePathUtil {
     
     
     
+    // TODO: ALL METHODS SHOULD BE STATIC BY THE WAY;
+        // THEY ALREADY FUNCTIONALLY STATIC.
+    
     // =========================================================
     // File returns
     // =========================================================
@@ -47,7 +50,7 @@ public class FilePathUtil {
         return getProjectFilesDir(sc_id).getAbsolutePath();
     }
     
-    // TODO: make method Injection
+    // TODO: make method for "Injection"
     
     
     
@@ -56,15 +59,15 @@ public class FilePathUtil {
         return new File(getProjectDir(sc_id), "broadcast").getAbsolutePath();
     }
     
-    // TODO: make method build_config
+    // TODO: make method for "build_config"
     
-    // TODO: make method command
+    // TODO: make method for "command"
     
     public static String getLastCompileLogPath(String sc_id) {
         return new File(getProjectDir(sc_id), "compile_log").getAbsolutePath();
     }
     
-    // TODO: make method file
+    // TODO: make method for "file"
     
     public String getPathImport(String sc_id) {
         return new File(getProjectDir(sc_id), "import").getAbsolutePath();
@@ -74,37 +77,37 @@ public class FilePathUtil {
         return new File(getProjectDir(sc_id), "java").getAbsolutePath();
     }
     
-    // TODO: make method library
+    // TODO: make method for "library"
     
     public String getPathLocalLibrary(String sc_id) {
         return new File(getProjectDir(sc_id), "local_library").getAbsolutePath();
     }
     
-    // TODO: make method logic
+    // TODO: make method for "logic"
     
     public String getPathPermission(String sc_id) {
         return new File(getProjectDir(sc_id), "permission").getAbsolutePath();
     }
     
-    // TODO: make method proguard
+    // TODO: make method for "proguard"
     
     public String getPathProguard(String sc_id) {
         return new File(getProjectDir(sc_id), "proguard-rules.pro").getAbsolutePath();
     }
     
-    // TODO: make method project_config
+    // TODO: make method for "project_config"
     
-    // TODO: make method resource
+    // TODO: make method for "resource"
     
     public String getManifestService(String sc_id) {
         return new File(getProjectDir(sc_id), "service").getAbsolutePath();
     }
     
-    // TODO: make method stringfog
+    // TODO: make method for "stringfog"
     
-    // TODO: make method view
+    // TODO: make method for "view"
     
-    // TODO: make method view_root
+    // TODO: make method for "view_root"
     
     
     
@@ -112,7 +115,7 @@ public class FilePathUtil {
     // inside (.sketchware/data/{projectId}/converted-vectors)
     // =========================================================
     public String getSvgFullPath(String sc_id, String resName) {
-        return new File(getPathSvg(sc_id) + File.separator + resName + ".svg").getAbsolutePath();
+        return new File(getPathSvg(sc_id), resName + ".svg").getAbsolutePath();
     }
     
     
