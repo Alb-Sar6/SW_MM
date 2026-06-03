@@ -11,8 +11,23 @@ public class FilePathUtil {
     
     
     
-    // TODO: ALL METHODS SHOULD BE STATIC BY THE WAY;
-        // THEY ALREADY FUNCTIONALLY STATIC.
+    // NOTE:
+        // ALL METHODS IN THIS CLASS HAVE BEEN MADE STATIC.
+    // WHY:
+        // It improves performance
+        // None of these methods use any instance fields or instance state.
+        // They are pure utility methods — they only take parameters and return paths.
+        // There was never a reason for them to be instance methods.
+    // DOES THIS AFFECT EXISTING CODE?
+        // No breaking changes.
+        // Java allows calling static methods on an instance:
+            // new FilePathUtil().getPathJava(sc_id) → still compiles and runs.
+        // The only difference is the compiler will now show a warning on those old calls:
+            // "Static method should be accessed in a static way"
+        // The warning is harmless — just a nudge to clean up the call site.
+        // Whenever u get free,
+            // replace: new FilePathUtil().method()
+            // With: FilePathUtil.method()
     
     // =========================================================
     // File returns
@@ -42,11 +57,11 @@ public class FilePathUtil {
     // =========================================================
     
     // ======= Folders (3) =======
-    public String getPathSvg(String sc_id) {
+    public static String getPathSvg(String sc_id) {
         return new File(getProjectDir(sc_id), "converted-vectors").getAbsolutePath();
     }
     
-    public String getPathProjectFilesDir(String sc_id) {
+    public static String getPathProjectFilesDir(String sc_id) {
         return getProjectFilesDir(sc_id).getAbsolutePath();
     }
     
@@ -55,7 +70,7 @@ public class FilePathUtil {
     
     
     // ======= Files (19) =======
-    public String getManifestBroadcast(String sc_id) {
+    public static String getManifestBroadcast(String sc_id) {
         return new File(getProjectDir(sc_id), "broadcast").getAbsolutePath();
     }
     
@@ -69,29 +84,29 @@ public class FilePathUtil {
     
     // TODO: make method for "file"
     
-    public String getPathImport(String sc_id) {
+    public static String getPathImport(String sc_id) {
         return new File(getProjectDir(sc_id), "import").getAbsolutePath();
     }
     
-    public String getManifestJava(String sc_id) {
+    public static String getManifestJava(String sc_id) {
         return new File(getProjectDir(sc_id), "java").getAbsolutePath();
     }
     
     // TODO: make method for "library"
     
-    public String getPathLocalLibrary(String sc_id) {
+    public static String getPathLocalLibrary(String sc_id) {
         return new File(getProjectDir(sc_id), "local_library").getAbsolutePath();
     }
     
     // TODO: make method for "logic"
     
-    public String getPathPermission(String sc_id) {
+    public static String getPathPermission(String sc_id) {
         return new File(getProjectDir(sc_id), "permission").getAbsolutePath();
     }
     
     // TODO: make method for "proguard"
     
-    public String getPathProguard(String sc_id) {
+    public static String getPathProguard(String sc_id) {
         return new File(getProjectDir(sc_id), "proguard-rules.pro").getAbsolutePath();
     }
     
@@ -99,7 +114,7 @@ public class FilePathUtil {
     
     // TODO: make method for "resource"
     
-    public String getManifestService(String sc_id) {
+    public static String getManifestService(String sc_id) {
         return new File(getProjectDir(sc_id), "service").getAbsolutePath();
     }
     
@@ -114,7 +129,7 @@ public class FilePathUtil {
     // =========================================================
     // inside (.sketchware/data/{projectId}/converted-vectors)
     // =========================================================
-    public String getSvgFullPath(String sc_id, String resName) {
+    public static String getSvgFullPath(String sc_id, String resName) {
         return new File(getPathSvg(sc_id), resName + ".svg").getAbsolutePath();
     }
     
@@ -125,43 +140,43 @@ public class FilePathUtil {
     // =========================================================
     
     // ======= Folders (10) =======
-    public String getPathAssets(String sc_id) {
+    public static String getPathAssets(String sc_id) {
         return new File(getProjectFilesDir(sc_id), "assets").getAbsolutePath();
     }
     
-    public String getPathBroadcast(String sc_id) {
+    public static String getPathBroadcast(String sc_id) {
         return new File(getProjectFilesDir(sc_id), "broadcast").getAbsolutePath();
     }
     
-    public String getPathJava(String sc_id) {
+    public static String getPathJava(String sc_id) {
         return getDirJava(sc_id).getAbsolutePath();
     }
     
-    public String getPathKotlinCompilerPlugins(String sc_id) {
+    public static String getPathKotlinCompilerPlugins(String sc_id) {
         return new File(getProjectFilesDir(sc_id), "kt_plugins").getAbsolutePath();
     }
     
-    public String getJarPathLocalLibraryUser(String sc_id) {
+    public static String getJarPathLocalLibraryUser(String sc_id) {
         return new File(getProjectFilesDir(sc_id), "library" + File.separator + "jar").getAbsolutePath();
     }
     
-    public String getDexPathLocalLibraryUser(String sc_id) {
+    public static String getDexPathLocalLibraryUser(String sc_id) {
         return new File(getProjectFilesDir(sc_id), "library" + File.separator + "dex").getAbsolutePath();
     }
     
-    public String getResPathLocalLibraryUser(String sc_id) {
+    public static String getResPathLocalLibraryUser(String sc_id) {
         return new File(getProjectFilesDir(sc_id), "library" + File.separator + "res").getAbsolutePath();
     }
     
-    public String getPathNativelibs(String sc_id) {
+    public static String getPathNativelibs(String sc_id) {
         return new File(getProjectFilesDir(sc_id), "native_libs").getAbsolutePath();
     }
     
-    public String getPathResource(String sc_id) {
+    public static String getPathResource(String sc_id) {
         return new File(getProjectFilesDir(sc_id), "resource").getAbsolutePath();
     }
     
-    public String getPathService(String sc_id) {
+    public static String getPathService(String sc_id) {
         return new File(getProjectFilesDir(sc_id), "service").getAbsolutePath();
     }
     
@@ -170,15 +185,15 @@ public class FilePathUtil {
     // =========================================================
     // SKETCHWARE_LOCAL_LIBS → inside (.sketchware/libs/local_libs)
     // =========================================================
-    public String getJarPathLocalLibrary(String libraryName) {
+    public static String getJarPathLocalLibrary(String libraryName) {
         return new File(getLocalLibraryDir(libraryName), "classes.jar").getAbsolutePath();
     }
     
-    public String getDexPathLocalLibrary(String libraryName) {
+    public static String getDexPathLocalLibrary(String libraryName) {
         return new File(getLocalLibraryDir(libraryName), "classes.dex").getAbsolutePath();
     }
     
-    public String getResPathLocalLibrary(String libraryName) {
+    public static String getResPathLocalLibrary(String libraryName) {
         return new File(getLocalLibraryDir(libraryName), "res").getAbsolutePath();
     }
         
