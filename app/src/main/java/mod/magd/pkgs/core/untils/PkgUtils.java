@@ -46,15 +46,6 @@ public class PkgUtils {
         );
     }
     
-    // File f = new File ("com/magd/ui");
-        // f.getPath() → "com/magd/ui" → returns exactly what you gave it
-        // f.getAbsolutePath() → "/storage/emulated/0/.sketchware/data/{projectId}/files/java/com/magd/ui" → returns the actual working directory
-    public static String toPkg (File dir) {
-        return toPkg ( dir.getPath() );
-    }
-    
-    
-    
     // Strips the java root prefix then converts to package name.
     // Example:
         // /storage/emulated/0/.sketchware/data/{projectId}/files/java/com/magd/ui" → "com.magd.ui"
@@ -73,6 +64,6 @@ public class PkgUtils {
     
     
 
-  
+    
 }
 
