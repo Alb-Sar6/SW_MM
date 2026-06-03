@@ -24,6 +24,10 @@ public class FilePathUtil {
         return new File(getProjectDir(sc_id), "files");
     }
     
+    public static File getDirJava(String sc_id) {
+        return new File(getProjectFilesDir(sc_id), "java");
+    }
+    
     public static File getLocalLibraryDir(String libraryName) {
         return new File(SKETCHWARE_LOCAL_LIBS, libraryName);
     }
@@ -127,7 +131,7 @@ public class FilePathUtil {
     }
     
     public String getPathJava(String sc_id) {
-        return new File(getProjectFilesDir(sc_id), "java").getAbsolutePath();
+        return getDirJava(sc_id).getAbsolutePath();
     }
     
     public String getPathKotlinCompilerPlugins(String sc_id) {
