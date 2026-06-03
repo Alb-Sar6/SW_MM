@@ -1,4 +1,4 @@
-# 📋 Folder Depth Validation & File (Creation & Import) Restrictions - Complete Plan
+# 📋 Package Depth Validation
 
     
 ## 🎯 Overview
